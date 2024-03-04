@@ -1,0 +1,64 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Addition Quiz</title>
+</head>
+<body>
+    <h2>Addition Quiz</h2>
+    
+    <%
+        int numQuestions = 5; // Number of questions in the quiz
+        int minNumber = 1; // Minimum number for addition
+        int maxNumber = 10; // Maximum number for addition
+        
+        // Generate random addition questions and store the answers
+        int[][] questions = new int[numQuestions][2];
+        int[] answers = new int[numQuestions];
+        for (int i = 0; i < numQuestions; i++) {
+            int num1 = (int) (Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+            int num2 = (int) (Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+            questions[i][0] = num1;
+            questions[i][1] = num2;
+            answers[i] = num1 + num2;
+        }
+        
+        // Process user's answers
+        int score = 0;
+        if (request.getParameter("submit") != null) {
+            for (int i = 0; i < numQuestions; i++) {
+                int userAnswer = Integer.parseInt(request.getParameter("answer" + i));
+                if (userAnswer == answers[i]) {
+                    score++;
+                }
+            }
+        }
+    %>
+    
+    <form method="post">
+        <%
+            // Display questions
+            for (int i = 0; i < numQuestions; i++) {
+        %>
+                <%= questions[i][0] %> + <%= questions[i][1] %> =
+                <input type="number" name="answer<%= i %>" required><br>
+        <%
+            }
+        %>
+        <br>
+        <input type="submit" name="submit" value="Submit">
+    </form>
+    
+    <%
+        // Display result after submission
+        if (request.getParameter("submit") != null) {
+    %>
+            <h2>Result</h2>
+            <p>You got <%= score %> out of <%= numQuestions %> correct!</p>
+    <%
+        }
+    %>
+</body>
+</html>
